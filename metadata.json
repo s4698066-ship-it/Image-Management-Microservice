@@ -1,0 +1,5 @@
+{
+  "name": "Image Management Microservice",
+  "description": "A high-performance, Dockerized microservice for image uploads, deduplication, and redundant storage using Cloudinary and ImgBB.",
+  "requestFramePermissions": []
+}

@@ -1,11 +1,53 @@
-<div align="center">
+# Image Management Microservice
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A production-ready, Dockerized microservice for image uploads, deduplication (SHA-256), and redundant storage (Cloudinary + ImgBB).
 
-  <h1>Built with AI Studio</h2>
+## Features
+- **Image Deduplication:** SHA-256 hashing to prevent redundant uploads.
+- **Dual-Upload Strategy:** Concurrent upload to Cloudinary (Primary) and ImgBB (Fallback).
+- **SSRF Protection:** Strict HTTPS validation and DNS-based private IP blocking for URL uploads.
+- **Dockerized:** Multi-stage Dockerfile and Docker Compose setup.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Prerequisites
+- Docker and Docker Compose
+- Node.js 20+ (for local development)
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Environment Variables
+Copy `.env.example` to `.env` and fill in the required values:
+```bash
+cp .env.example .env
+```
+Required variables:
+- `DATABASE_URL`
+- `CLOUDINARY_URL`
+- `IMGBB_API_KEY`
 
-</div>
+## Running with Docker (Recommended)
+```bash
+docker-compose up --build
+```
+This will start the PostgreSQL database and the Node.js application. The database will be initialized automatically.
+
+## Local Development
+1. Start a local PostgreSQL instance and update `DATABASE_URL` in `.env`.
+2. Install dependencies: `npm install`
+3. Start dev server: `npm run dev`
+
+## API Endpoints
+
+### `GET /api/health`
+Returns the health status of the service.
+
+### `POST /api/upload`
+Uploads an image via Base64 or URL.
+**Payload:**
+```json
+{
+  "base64": "data:image/png;base64,iVBORw0KGgo...",
+  // OR
+  "url": "https://example.com/image.jpg"
+}
+```
+
+### `GET /api/images/:hash`
+Retrieves image metadata by its SHA-256 hash.
